@@ -1,0 +1,24 @@
+version: '3.4'
+
+services:
+  balance:
+    container_name: VZ_Container
+    build:
+      context: ./
+    command: >
+      bash -c "migrate -path ./schema/migrations -database postgres://postgres:@balance_database_1:5432/postgres?sslmode=disable up &&  go run main.go"
+    ports:
+      - "8001:8001"
+    volumes:
+      - ./:/code
+    depends_on:
+      - database
+
+  database:
+    restart: always
+    image: postgres:12.0-alpine
+    volumes:
+      - ./.build/volumes/databases/postgres/data:/var/lib/postgresql/data/
+    ports:
+      - "5444:5432"
+

@@ -1,0 +1,15 @@
+server:
+  mode: "debug"
+  apiV1:
+    port: "8001"
+
+logger:
+  level: 5
+
+db:
+  psql:
+    username: "postgres"
+    dbname: "postgres"
+    sslmode: "disable"
+    port: "5432"
+    host: "balance_database_1"
