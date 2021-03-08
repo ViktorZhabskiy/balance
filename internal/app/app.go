@@ -12,6 +12,7 @@ import (
 	_ "github.com/lib/pq"
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/viper"
+	"log"
 	"net/http"
 	"os"
 	"os/signal"
@@ -20,11 +21,12 @@ import (
 )
 
 func Run() {
-	InitLogger()
 
 	if err := config.Init(); err != nil {
-		logrus.Fatalf("Failed read config. Reason: %s", err)
+		log.Fatalf("Failed read config. Reason: %s", err)
 	}
+
+	InitLogger()
 
 	// open connect to db
 	db, err := NewPsqlDb()

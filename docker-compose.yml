@@ -6,7 +6,7 @@ services:
     build:
       context: ./
     command: >
-      bash -c "migrate -path ./schema/migrations -database postgres://postgres:@balance_database_1:5432/postgres?sslmode=disable up &&  go run main.go"
+      bash -c "migrate -path ./schema/migrations -database postgres://postgres:@balance_database_1:5432/postgres?sslmode=disable up && go run main.go"
     ports:
       - "8001:8001"
     volumes:
