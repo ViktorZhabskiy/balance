@@ -9,9 +9,7 @@
     docker-compose up balance
 ```
 
-####Api
-
-
+#### Api
 Default users id = 1, id = 2.
 1. Get user balance - ```curl --location --request GET 'localhost:8001/users/1/balance'```
 2. Update user balance - ```curl --location --request POST 'localhost:8001/users/balance' \
