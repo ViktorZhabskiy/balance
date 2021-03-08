@@ -1,13 +1,15 @@
 package handlers
 
-import "balance/internal/service"
+import (
+	"balance/internal/service"
+)
 
 type Handlers struct {
-	balanceHandler BalanceHandler
+	BalanceHandler BalanceHandler
 }
 
-func NewHandlers(balanceSrv service.IBalance) Handlers {
+func NewHandlers(balanceSrv service.UserBalance) Handlers {
 	return Handlers{
-		balanceHandler: NewBalanceHandler(balanceSrv),
+		BalanceHandler: NewBalanceHandler(balanceSrv),
 	}
 }

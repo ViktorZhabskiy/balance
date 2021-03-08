@@ -1,6 +1,9 @@
 package service
 
+import "balance/internal/model"
+
 type (
-	IBalance interface {
+	UserBalance interface {
+		Get(userId int64) ([]model.Balance, error)
 	}
 )

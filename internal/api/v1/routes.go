@@ -23,6 +23,12 @@ func NewV1Routes(handlers handlers.Handlers) *chi.Mux {
 		http.Error(w, http.StatusText(404), 404)
 	})
 
+	r.Route("/users", func(r chi.Router) {
+		r.Route("/{userId}", func(r chi.Router) {
+			r.Get("/balance", handlers.BalanceHandler.GetUserBalance())
+		})
+	})
+
 	walkFunc := func(method string, route string, handler http.Handler, middlewares ...func(http.Handler) http.Handler) error {
 		route = strings.Replace(route, "/*/", "/", -1)
 		fmt.Printf("%s %s\n", method, route)
