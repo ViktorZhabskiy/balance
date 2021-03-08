@@ -11,5 +11,5 @@ db:
     username: "postgres"
     dbname: "postgres"
     sslmode: "disable"
-    port: "5444"
-    host: "localhost"
+    port: "5432"
+    host: "balance_database_1"
