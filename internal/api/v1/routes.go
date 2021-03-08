@@ -27,6 +27,7 @@ func NewV1Routes(handlers handlers.Handlers) *chi.Mux {
 		r.Route("/{userId}", func(r chi.Router) {
 			r.Get("/balance", handlers.BalanceHandler.GetUserBalance())
 		})
+		r.Post("/balance", handlers.BalanceHandler.UpdateUserBalance())
 	})
 
 	walkFunc := func(method string, route string, handler http.Handler, middlewares ...func(http.Handler) http.Handler) error {

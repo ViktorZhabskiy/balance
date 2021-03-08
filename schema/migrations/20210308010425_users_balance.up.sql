@@ -5,6 +5,7 @@ CREATE TABLE "users_balance" (
 	"currency_id" smallint NOT NULL,
 	"created_at" timestamp NOT NULL DEFAULT NOW(),
 	"updated_at" timestamp,
+    UNIQUE ("user_id", "currency_id"),
 	CONSTRAINT "users_balance_pk" PRIMARY KEY ("id"),
     CONSTRAINT "users_balance_fk0" FOREIGN KEY ("user_id") REFERENCES "users"("id"),
     CONSTRAINT "users_balance_fk1" FOREIGN KEY ("currency_id") REFERENCES "currency"("id")

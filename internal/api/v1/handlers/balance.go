@@ -19,24 +19,14 @@ func NewBalanceHandler(balanceSrv service.UserBalance) BalanceHandler {
 		balanceSrv: balanceSrv,
 	}
 }
+
 func (h *BalanceHandler) GetUserBalance() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		//data := &dto.UserBalanceRequest{}
-		//if err := render.Bind(r, data); err != nil {
-		//	render.Render(w, r, &dto.ErrResponse{
-		//		Err:            err,
-		//		HTTPStatusCode: 400,
-		//		StatusText:     "Invalid request.",
-		//		ErrorText:      err.Error(),
-		//	})
-		//	return
-		//}
-
 		userId := chi.URLParam(r, "userId")
 		if userId == "" {
 			logrus.WithField("user_id", userId).Errorf("Unknown user id in request")
 			render.Render(w, r, &dto.ErrResponse{
-				HTTPStatusCode: 400,
+				HTTPStatusCode: http.StatusBadRequest,
 				ErrorText:      "User balance not found",
 			})
 			return
@@ -46,8 +36,7 @@ func (h *BalanceHandler) GetUserBalance() http.HandlerFunc {
 		if err != nil {
 			logrus.Errorf("User id not valid. Err: %s", err)
 			render.Render(w, r, &dto.ErrResponse{
-				Err:            err,
-				HTTPStatusCode: 400,
+				HTTPStatusCode: http.StatusBadRequest,
 				ErrorText:      err.Error(),
 			})
 			return
@@ -57,8 +46,7 @@ func (h *BalanceHandler) GetUserBalance() http.HandlerFunc {
 		if err != nil {
 			logrus.Errorf("Error get user balance. Reason: %s", err)
 			render.Render(w, r, &dto.ErrResponse{
-				Err:            err,
-				HTTPStatusCode: 400,
+				HTTPStatusCode: http.StatusBadRequest,
 				ErrorText:      err.Error(),
 			})
 			return
@@ -68,5 +56,44 @@ func (h *BalanceHandler) GetUserBalance() http.HandlerFunc {
 
 		render.Status(r, http.StatusOK)
 		render.Render(w, r, userBalance)
+	}
+}
+
+func (h *BalanceHandler) UpdateUserBalance() http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		transaction := &dto.BalanceTransactionRequest{}
+		if err := render.Bind(r, transaction); err != nil {
+			render.Render(w, r, &dto.ErrResponse{
+				HTTPStatusCode: http.StatusBadRequest,
+				ErrorText:      err.Error(),
+			})
+			return
+		}
+
+		err := transaction.Validate()
+		if err != nil {
+			render.Render(w, r, &dto.ErrResponse{
+				HTTPStatusCode: http.StatusBadRequest,
+				ErrorText:      err.Error(),
+			})
+			return
+		}
+
+		err = h.balanceSrv.PostTransaction(service.Transaction{
+			UserId:     transaction.UserId,
+			Currency:   transaction.Currency,
+			Amount:     transaction.Amount,
+			TimePlaced: transaction.TimePlaced,
+			Type:       transaction.Type,
+		})
+		if err != nil {
+			render.Render(w, r, &dto.ErrResponse{
+				HTTPStatusCode: http.StatusInternalServerError,
+				ErrorText:      err.Error(),
+			})
+			return
+		}
+
+		render.Status(r, http.StatusOK)
 	}
 }
